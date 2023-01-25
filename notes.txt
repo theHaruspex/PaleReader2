@@ -1,0 +1,2 @@
+https://www.scrapingbee.com/blog/html-parsing-jquery/
+    • For scraping w/ jQuery
