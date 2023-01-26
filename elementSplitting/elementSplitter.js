@@ -1,39 +1,58 @@
 const inputText = "<p>Lorem ipsum <i>set amit</i> lenore des.</p>"
 
-function isClosingTag(elementString, i) {
+function isClosingTag(elementString, index) {
     return (
-        elementString[i] == "<"
-        && elementString[i+1] == "/"
+        elementString[index] == "<"
+        && elementString[index+1] == "/"
 )}
 
-function isOpeningTag(elementString, i) {
+function isOpeningTag(elementString, index) {
     return (
-        elementString[i] == "<"
-        && !isClosingTag(elementString, i)
+        elementString[index] == "<"
+        && !isClosingTag(elementString, index)
 )}
 
 function getFirstTag(elementString) {
+    console.log("running gFT()")
+    console.log(`elementString = ${elementString}`)
     let beginningIndex = elementString.search("<")
     let endingIndex = elementString.search(">") + 1
     return elementString.substring(beginningIndex, endingIndex)
 }
 
+
+function updateTags(tagsArray, elementString) {
+    // Update name.
+    let closingTag = getFirstTag(elementString)
+    elementString = elementString.replace(closingTag, '')
+
+    let openingTag = closingTag.replace("/", "")
+    let index = tagsArray.indexOf(openingTag)
+    tagsArray.splice(index, 1)
+    return [tagsArray, elementString]
+}
+
+
 function identifyTags(elementString) {
+    // Combine activeTags and element string indo dict.
     let activeTags = []
-    for (let i = 0; i < elementString.length; i++) {
+
+    let originalString = elementString
+    let updatedString = elementString
+    for (let i = 0; i < originalString.length; i++) {
+
+        console.log(originalString[i])
+        console.log(updatedString)
+        console.log(activeTags)
 
         if (isClosingTag(elementString, i)) {
-            let closingTag = getFirstTag(elementString)
-            let openingTag = closingTag.replace("/", "")
-            let targetIndex = activeTags.indexOf(openingTag)
-            activeTags.splice(targetIndex, 1)
-            elementString = elementString.replace(closingTag, '')
+            activeTags, updatedString = updateTags(activeTags, updatedString)
         }
         
         else if (isOpeningTag(elementString, i)) {
-            tag = getFirstTag(elementString)
+            tag = getFirstTag(updatedString)
             activeTags.push(tag)
-            elementString = elementString.replace(tag, '')
+            updatedString = updatedString.replace(tag, '')
         }
     }
 }
