@@ -13,46 +13,31 @@ function isOpeningTag(elementString, index) {
 )}
 
 function getFirstTag(elementString) {
-    console.log("running gFT()")
-    console.log(`elementString = ${elementString}`)
     let beginningIndex = elementString.search("<")
     let endingIndex = elementString.search(">") + 1
     return elementString.substring(beginningIndex, endingIndex)
 }
 
-
-function updateTags(tagsArray, elementString) {
-    // Update name.
-    let closingTag = getFirstTag(elementString)
-    elementString = elementString.replace(closingTag, '')
-
-    let openingTag = closingTag.replace("/", "")
-    let index = tagsArray.indexOf(openingTag)
-    tagsArray.splice(index, 1)
-    return [tagsArray, elementString]
-}
-
-
 function identifyTags(elementString) {
-    // Combine activeTags and element string indo dict.
+    // This is a very long function...
     let activeTags = []
-
-    let originalString = elementString
-    let updatedString = elementString
-    for (let i = 0; i < originalString.length; i++) {
-
-        console.log(originalString[i])
-        console.log(updatedString)
-        console.log(activeTags)
+    updatedElementString = elementString
+    for (let i = 0; i < elementString.length; i++) {
 
         if (isClosingTag(elementString, i)) {
-            activeTags, updatedString = updateTags(activeTags, updatedString)
+            let closingTag = getFirstTag(updatedElementString)
+            let openingTag = closingTag.replace("/", "")
+
+            let index = activeTags.indexOf(openingTag)
+            activeTags.splice(index, 1)
+
+            updatedElementString = updatedElementString.replace(closingTag, '')
         }
         
         else if (isOpeningTag(elementString, i)) {
-            tag = getFirstTag(updatedString)
+            tag = getFirstTag(updatedElementString)
             activeTags.push(tag)
-            updatedString = updatedString.replace(tag, '')
+            updatedElementString = updatedElementString.replace(tag, '')
         }
     }
 }
