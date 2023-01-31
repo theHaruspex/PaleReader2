@@ -1,46 +1,48 @@
-const inputText = "<p>Lorem ipsum <i>set amit</i> lenore des.</p>"
-
-function isClosingTag(elementString, index) {
-    return (
-        elementString[index] == "<"
-        && elementString[index+1] == "/"
-)}
-
-function isOpeningTag(elementString, index) {
-    return (
-        elementString[index] == "<"
-        && !isClosingTag(elementString, index)
-)}
-
 function getFirstTag(elementString) {
     let beginningIndex = elementString.search("<")
     let endingIndex = elementString.search(">") + 1
     return elementString.substring(beginningIndex, endingIndex)
 }
 
-function identifyTags(elementString) {
-    // This is a very long function...
+function extractTags(elementString) {
+    let extractedTags = []
     let activeTags = []
-    updatedElementString = elementString
-    for (let i = 0; i < elementString.length; i++) {
+    let wordsArray = elementString.split(" ")
 
-        if (isClosingTag(elementString, i)) {
-            let closingTag = getFirstTag(updatedElementString)
-            let openingTag = closingTag.replace("/", "")
+    for (var i in wordsArray) {
+        let word = wordsArray[i]
 
-            let index = activeTags.indexOf(openingTag)
-            activeTags.splice(index, 1)
+        if (word.startsWith('<')) {
+            let openingTag = getFirstTag(word)
+            let newWord = word.replace(openingTag, '')
+            extractedTags.push([
+                newWord,
+                [openingTag].concat(activeTags)
+            ])           
+            activeTags.push(openingTag) 
+        }
 
-            updatedElementString = updatedElementString.replace(closingTag, '')
+        else if (word.endsWith('>')) {
+            let closingTag = getFirstTag(word)
+            let openingTag = closingTag.replace('/', '')
+            let newWord = word.replace(closingTag, '')
+            extractedTags.push([
+                newWord,
+                [].concat(activeTags)
+            ])
+            let targetIndex = activeTags.indexOf(openingTag)
+            activeTags.splice(targetIndex)
         }
         
-        else if (isOpeningTag(elementString, i)) {
-            tag = getFirstTag(updatedElementString)
-            activeTags.push(tag)
-            updatedElementString = updatedElementString.replace(tag, '')
+        else {
+            extractedTags.push([
+                word,
+                [].concat(activeTags)
+            ])
         }
     }
 }
 
 
-identifyTags(inputText)
+const inputText = "<p>Lorem ipsum <i>set amit</i> lenore des.</p>"
+extractTags(inputText)
