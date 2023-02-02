@@ -20,28 +20,26 @@ function isOverflowing() {
     return (getContentContainerHeight() - getContentHeight()) < 0
 }
 
+function renderOverflow(element) {
+    let updatedElementsArray = splitElement(element)
+    for (i in updatedElementsArray) {
+        let updatedElement = updatedElementsArray[i]
+        $(".content").last().append(updatedElement);
+        if (isOverflowing()) {
+            $(".content").children().last().remove();
+            $("#chapterContainer").append(newPage);
+            $(".content").last().append(updatedElement);
+        }
+    }
+}
+
 function renderPage(elements) {
     while (elements.length > 0) {
         let element = elements.shift();
         $(".content").last().append(element);
-        
         if (isOverflowing()) {
             $(".content").children().last().remove();
-            
-            let updatedElementsArray = splitElement(element)
-            
-            
-            for (i in updatedElementsArray) {
-                let updatedElement = updatedElementsArray[i]
-                $(".content").last().append(updatedElement);
-                if (isOverflowing()) {
-                    $(".content").children().last().remove();
-                    $("#chapterContainer").append(newPage);
-                    $(".content").last().append(updatedElement);
-                }
-            }
-
-
+            renderOverflow(element)
         }
     }
 }
