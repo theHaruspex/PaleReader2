@@ -4,8 +4,8 @@ function getFirstTag(elementString) {
     return elementString.substring(beginningIndex, endingIndex)
 }
 
-function extractTags(elementString) {
-    let extractedTags = []
+function deconstructElement(elementString) {
+    let elementsArray = []
     let activeTags = []
     let wordsArray = elementString.split(" ")
 
@@ -15,7 +15,7 @@ function extractTags(elementString) {
         if (word.startsWith('<')) {
             let openingTag = getFirstTag(word)
             let newWord = word.replace(openingTag, '')
-            extractedTags.push([
+            elementsArray.push([
                 newWord,
                 [openingTag].concat(activeTags)
             ])           
@@ -26,7 +26,7 @@ function extractTags(elementString) {
             let closingTag = getFirstTag(word)
             let openingTag = closingTag.replace('/', '')
             let newWord = word.replace(closingTag, '')
-            extractedTags.push([
+            elementsArray.push([
                 newWord,
                 [].concat(activeTags)
             ])
@@ -35,14 +35,67 @@ function extractTags(elementString) {
         }
         
         else {
-            extractedTags.push([
+            elementsArray.push([
                 word,
                 [].concat(activeTags)
             ])
         }
     }
+    return elementsArray
 }
 
 
+function addTag(elementsArray, tag) {
+    let updatedElements = []
+    for (var i in elementsArray) {
+        let element = elementsArray[i]
+        let word = element[0]
+        let tags = element[1]
+        tags.push(tag)
+        updatedElements.push([
+            word,
+            tags
+        ])
+    }
+    return updatedElements
+}
+
+function constructTagString(tagsArray) {
+    let openingTagString = ""
+    let closingTagString = ""
+    for (i in tagsArray) {
+        let tag = tagsArray[i]
+        if (tag == "<p>") {continue}
+        let closingTag = tag.slice(0, 1) + "/" + tag.slice(1)
+        openingTagString = openingTagString + tag
+        closingTagString = closingTag + closingTagString
+    }
+    return openingTagString + "#" + closingTagString
+}
+
+function reconstructElement(elementsArray) {
+    let elementString = ""
+    for (var i in elementsArray) {
+        let element = elementsArray[i]
+        let word = element[0] + " "
+        let tags = element[1]
+        let tagTemplate = constructTagString(tags)
+        let tagString = tagTemplate.replace('#', word)
+        elementString = elementString + tagString
+    }
+    return elementString
+}
+
+function splitElement(inputText) {
+    let elements = deconstructElement(inputText)
+    let updatedElements = addTag(elements, "<span>")
+    let updatedString = reconstructElement(updatedElements)
+    return updatedString
+    }
+
+
+
 const inputText = "<p>Lorem ipsum <i>set amit</i> lenore des.</p>"
-extractTags(inputText)
+const outputText = splitElement(inputText)
+console.log(inputText)
+console.log(outputText)
