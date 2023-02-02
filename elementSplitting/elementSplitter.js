@@ -74,28 +74,22 @@ function constructTagString(tagsArray) {
 }
 
 function reconstructElement(elementsArray) {
-    let elementString = ""
+    let elementStringsArray = []
     for (var i in elementsArray) {
         let element = elementsArray[i]
         let word = element[0] + " "
         let tags = element[1]
         let tagTemplate = constructTagString(tags)
         let tagString = tagTemplate.replace('#', word)
-        elementString = elementString + tagString
+        elementStringsArray.push(tagString)
     }
-    return elementString
+    return elementStringsArray
 }
 
 function splitElement(inputText) {
     let elements = deconstructElement(inputText)
     let updatedElements = addTag(elements, "<span>")
-    let updatedString = reconstructElement(updatedElements)
-    return updatedString
-    }
+    let updatedStringsArray = reconstructElement(updatedElements)
+    return updatedStringsArray
+}
 
-
-
-const inputText = "<p>Lorem ipsum <i>set amit</i> lenore des.</p>"
-const outputText = splitElement(inputText)
-console.log(inputText)
-console.log(outputText)

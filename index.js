@@ -27,9 +27,22 @@ function renderPage(elements) {
         
         if (isOverflowing()) {
             $(".content").children().last().remove();
-            $("#chapterContainer").append(newPage);
-            $(".content").last().append(element);
-        };
+            
+            let updatedElementsArray = splitElement(element)
+            
+            
+            for (i in updatedElementsArray) {
+                let updatedElement = updatedElementsArray[i]
+                $(".content").last().append(updatedElement);
+                if (isOverflowing()) {
+                    $(".content").children().last().remove();
+                    $("#chapterContainer").append(newPage);
+                    $(".content").last().append(updatedElement);
+                }
+            }
+
+
+        }
     }
 }
 
