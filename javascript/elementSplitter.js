@@ -44,7 +44,6 @@ function deconstructElement(elementString) {
     return elementsArray
 }
 
-
 function addTag(elementsArray, tag) {
     let updatedElements = []
     for (var i in elementsArray) {
@@ -93,3 +92,4 @@ function splitElement(inputText) {
     return updatedStringsArray
 }
 
+// But what if it's an image, or style?
