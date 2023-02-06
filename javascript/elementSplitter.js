@@ -52,21 +52,7 @@ function deconstructElement(elementString) {
     return elementsArray
 }
 
-function addTag(elementsArray, tag) {
-    let updatedElements = []
-    for (var i in elementsArray) {
-        let element = elementsArray[i]
-        let word = element[0]
-        let tags = element[1]
-        tags.push(tag)
-        updatedElements.push([
-            word,
-            tags
-        ])
-    }
-    return updatedElements
-}
-
+ 
 function constructTagString(tagsArray) {
     let openingTagString = ""
     let closingTagString = ""
