@@ -17,6 +17,7 @@ function hasChildren(node) {
 }
 
 function extractTags(node) {
+
     let tagPairs = []
     let decendant = node.firstChild
     while (decendant) {
@@ -84,6 +85,10 @@ function addTag(tagPairs, newTag) {
 }
 
 
+
+// To-do: Finish this function!!
+
+// To-do: Rename things. Wtf is a formatted pair.
 function reconstructElement(formattedPairs) {
     let updatedPairs = addTag(formattedPairs, 'span')
     return updatedPairs
@@ -93,3 +98,5 @@ const sampleElement = "<p>There's a <strong>thing behind</strong> the thing, <em
 console.log(sampleElement)
 let item = deconstructElement(sampleElement)
 let item2 = reconstructElement(item)
+
+// After, make the homepage. 
