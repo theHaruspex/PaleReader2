@@ -5,7 +5,8 @@ function isRoot(node) {
 function getAncestorTags(node) {
     let ancestorTags = []
     while (true) {
-        if (isRoot(node)) {break}
+        if (isRoot(node)) {
+            break}
         node = node.parentNode
         ancestorTags.push(node.nodeName.toLowerCase())
     }
@@ -74,29 +75,50 @@ function addTag(tagPairs, newTag) {
     for (var i in tagPairs) {
         let pair = tagPairs[i]
         let word = pair[0]
-        console.log(word)
         let tags = pair[1]
-        console.log(tags)
-        tags.push(newTag)
-        console.log(tags)
-        updatedPairs.push([word, tags])
+        let updatedTags = tags.concat(newTag)
+        updatedPairs.push([word, updatedTags])
     }
     return updatedPairs
 }
 
-
-
-// To-do: Finish this function!!
-
-// To-do: Rename things. Wtf is a formatted pair.
-function reconstructElement(formattedPairs) {
-    let updatedPairs = addTag(formattedPairs, 'span')
-    return updatedPairs
+function constructTagString(tagPair) {
+    let word = tagPair[0]
+    let tags = tagPair[1]
+    let prefix = ""
+    let suffix = ""
+    for (i in tags) {
+        let tag = tags[i]
+        let openTag = `<${tag}>`
+        let closeTag = `</${tag}>`
+        prefix = prefix + openTag
+        suffix = closeTag + suffix
+    }
+    let tagString = prefix + word + suffix
+    return tagString
 }
 
-const sampleElement = "<p>There's a <strong>thing behind</strong> the thing, <em>even <strong>though</strong> I can't see it.</em></p>"
-console.log(sampleElement)
-let item = deconstructElement(sampleElement)
-let item2 = reconstructElement(item)
+// To-do: Rename things. Wtf is a formatted pair.
+// To-do: factor out the removing the o tag from tag pairs
+function reconstructElement(tagPairs) {
+    let updatedPairs = addTag(tagPairs, 'span')
+    let reconstructedElement = ''
+    for (var i in updatedPairs) {
+        let pair = updatedPairs[i]
+        let word = pair[0]
+        let tags = pair[1]
+
+        let elementString = word + ' '
+        for (var ii in tags) {
+            let tag = tags[ii]
+            if (tag == "p") {continue}
+            let openingTag = `<${tag}>`
+            let closingTag = `</${tag}>`
+            elementString = openingTag + elementString + closingTag    
+        }
+        reconstructedElement = reconstructedElement + elementString + " "
+    }
+    return reconstructedElement
+}
 
 // After, make the homepage. 
