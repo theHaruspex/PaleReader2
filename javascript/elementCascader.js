@@ -18,7 +18,6 @@ function hasChildren(node) {
 }
 
 function extractTags(node) {
-
     let tagPairs = []
     let decendant = node.firstChild
     while (decendant) {
@@ -100,15 +99,16 @@ function constructTagString(tagPair) {
 
 // To-do: Rename things. Wtf is a formatted pair.
 // To-do: factor out the removing the o tag from tag pairs
+// To-do: Fix bug with commas after italicized text
 function reconstructElement(tagPairs) {
     let updatedPairs = addTag(tagPairs, 'span')
-    let reconstructedElement = ''
+    let reconstructedElementsArray = []
     for (var i in updatedPairs) {
         let pair = updatedPairs[i]
-        let word = pair[0]
+        let word = pair[0] + ' '
         let tags = pair[1]
 
-        let elementString = word + ' '
+        let elementString = word
         for (var ii in tags) {
             let tag = tags[ii]
             if (tag == "p") {continue}
@@ -116,9 +116,14 @@ function reconstructElement(tagPairs) {
             let closingTag = `</${tag}>`
             elementString = openingTag + elementString + closingTag    
         }
-        reconstructedElement = reconstructedElement + elementString + " "
+        reconstructedElementsArray.push(elementString)
     }
-    return reconstructedElement
+    return reconstructedElementsArray
 }
+
+function splitElement(elementString) {
+    let deconstruct = deconstructElement(elementString)
+    return reconstructElement(deconstruct)
+} 
 
 // After, make the homepage. 

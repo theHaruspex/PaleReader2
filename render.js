@@ -34,8 +34,12 @@ function renderOverflow(element) {
 }
 
 function renderPage(elements) {
-    while (elements.length > 0) {
-        let element = elements.shift();
+    let title = elements[0]
+    console.log(title)
+    let content = elements[1]
+    $("#chapterHeader").html(title)
+    while (content.length > 0) {
+        let element = content.shift();
         $(".content").last().append(element);
         if (isOverflowing()) {
             $(".content").children().last().remove();
@@ -44,10 +48,15 @@ function renderPage(elements) {
     }
 }
 
+
 $(document).ready(function() {
+    let apiURL = "https://public-api.wordpress.com/rest/v1.1/sites/www.palewebserial.wordpress.com/posts"
     let paleElements = []
-    fetch('resources/pale.html')
-        .then(response => response.text())
-        .then(text => paleElements = text.split('\n'))
+    fetch(apiURL)
+        .then(response => response.json())
+        .then(json => extractLatestChapter(json))
+        .then(chapter => paleElements = [
+            chapter[0],
+            chapter[1].split(`\n`)])
         .then(() => renderPage(paleElements));
 })

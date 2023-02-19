@@ -43,13 +43,15 @@ function constructTOC(tocJSON) {
     return toc
 }
 
-function fetchTOC() {
-    let apiURL = "https://public-api.wordpress.com/rest/v1.1/sites/www.palewebserial.wordpress.com/posts/slug:table-of-contents"
-    fetch(url)
-    .then((response) => response.json())
-    .then((json) => constructTOC(json))
-}
+//     let apiURL = "https://public-api.wordpress.com/rest/v1.1/sites/www.palewebserial.wordpress.com/posts/slug:table-of-contents"
 
+
+function extractLatestChapter(json) {
+    let chapter = json.posts[0]
+    let title = chapter.title
+    let content = chapter.content    
+    return [title, content] 
+}
 
 
 
